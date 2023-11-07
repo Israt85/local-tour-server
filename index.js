@@ -30,11 +30,21 @@ async function run() {
 
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    app.get('/service', async(req,res)=>{
-        const cursor = ServiceCollection.find()
-        const result = await cursor.toArray()
-        res.send(result)
+    // app.get('/service', async(req,res)=>{
+    //     const cursor = ServiceCollection.find()
+    //     const result = await cursor.toArray()
+    //     res.send(result)
 
+    // })
+    app.get('/service', async(req,res)=>{
+      console.log(req.query.email);
+      let query ={};
+      if(req.query?.email){
+        query = {email: req.query.email}
+      }
+
+      const result= await ServiceCollection.find(query).toArray()
+      res.send(result)
     })
 
     app.get('/service/:id', async(req,res)=>{
@@ -43,6 +53,8 @@ async function run() {
       const result = await ServiceCollection.findOne(query)
       res.send(result)
     })
+    
+    
 
     app.post('/service', async(req,res)=>{
       const user = req.body
