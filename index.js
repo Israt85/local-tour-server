@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser')
 require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
@@ -14,6 +15,7 @@ app.use(cors({
   credentials: true
 }))
 app.use(express.json())
+app.use(cookieParser())
 console.log(process.env.DB_USER);
 
 
@@ -57,6 +59,11 @@ async function run() {
 
     })
 
+    app.post('/logout', async(req,res)=>{
+      const user = req.body;
+      console.log('logging out', user);
+      res.clearCookie('token', {maxAge: 0}).send({success: true})
+    })
 
 
 
@@ -115,6 +122,7 @@ async function run() {
    })
   app.get('/booking', async(req,res)=>{
     console.log(req.query.email);
+    console.log('coook cook',req.cookies);
     let query ={};
     if(req.query?.email){
       query = {email: req.query.email}
