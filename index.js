@@ -27,6 +27,7 @@ async function run() {
 
     const database = client.db('ServiceCollection')
     const ServiceCollection = database.collection('services')
+    const BookingCollection = database.collection('Booking')
 
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
@@ -62,11 +63,39 @@ async function run() {
       const result = await ServiceCollection.insertOne(user)
       res.send(result)
     })
+    app.put('/service/:id', async(req,res)=>{
+      const id = req.params.id
+      const updateUser = req.body
+      console.log(updateUser);
+      const filter = {_id : new ObjectId(id)}
+      const update = {
+          $set:{
+            // service_price:updateUser.price, 
+            // service_name:updateUser.service ,
+            //  service_description: updateUser.description,
+            //   service_area: updateUser.address, 
+            //   service_image:updateUser.photo,
+            ...updateUser
+          }
+      }
+      const result = await ServiceCollection.updateOne(filter,update,{
+        upsert: true
+      })
+      res.send(result)
+  })
 
    app.delete('/service/:id', async(req,res)=>{
     const id = req.params.id
     const query = {_id : new ObjectId(id)}
     const result = await ServiceCollection.deleteOne(query)
+    res.send(result)
+   })
+
+
+   app.post('/booking', async(req,res)=>{
+    const user = req.body
+    console.log(user);
+    const result = await BookingCollection.insertOne(user)
     res.send(result)
    })
 
