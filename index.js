@@ -90,7 +90,11 @@ async function run() {
     const result = await ServiceCollection.deleteOne(query)
     res.send(result)
    })
-
+  app.get('/booking', async(req,res)=>{
+        const cursor = BookingCollection.find()
+        const result = await cursor.toArray()
+        res.send(result)
+  })
 
    app.post('/booking', async(req,res)=>{
     const user = req.body
